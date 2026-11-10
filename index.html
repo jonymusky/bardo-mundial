@@ -17,6 +17,8 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💥</text></svg>" />
   </head>
   <body>
+    <div class="scene" id="scene" aria-hidden="true"></div>
+    <div class="progress" id="progress" aria-hidden="true"></div>
     <header class="top">
       <a class="brand" href="./">BARDO<span>MUNDIAL</span></a>
       <nav class="langs" id="langs" aria-label="Idioma / Language"></nav>
@@ -41,14 +43,14 @@
         </div>
       </section>
 
-      <section class="features">
+      <section class="features" data-reveal-group>
         <article><img src="./art/bg_tokyo.webp" alt="" loading="lazy" /><h2 data-i18n="land.f1t"></h2><p data-i18n="land.f1d"></p></article>
         <article><canvas id="squad" width="640" height="360" aria-hidden="true"></canvas><h2 data-i18n="land.f2t"></h2><p data-i18n="land.f2d"></p></article>
         <article><div class="arsenal" aria-hidden="true"><img src="./art/launcher.webp" alt="" loading="lazy" /><img src="./art/robodog.webp" alt="" loading="lazy" /><img src="./art/drone.webp" alt="" loading="lazy" /><img src="./art/satellite.webp" alt="" loading="lazy" /></div><h2 data-i18n="land.f3t"></h2><p data-i18n="land.f3d"></p></article>
         <article><img src="./media/shot-physics.jpg" alt="" loading="lazy" /><h2 data-i18n="land.f4t"></h2><p data-i18n="land.f4d"></p></article>
       </section>
 
-      <section class="why">
+      <section class="why" data-reveal-group>
         <h2 data-i18n="land.whyT"></h2>
         <p data-i18n="land.why1"></p>
         <p data-i18n="land.why2"></p>
@@ -59,7 +61,7 @@
         </div>
       </section>
 
-      <section class="how">
+      <section class="how" data-reveal-group>
         <h2 data-i18n="land.how"></h2>
         <ul>
           <li data-i18n="land.how1"></li>

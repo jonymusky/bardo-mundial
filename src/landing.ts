@@ -37,7 +37,7 @@ function applyLang(): void {
       return b;
     }),
   );
-  sound.textContent = video.muted ? `🔇 ${t('land.sound')}` : `🔊 ${t('land.mute')}`;
+  paintSound();
   capKey = '';
   tickCaption();
 }
@@ -61,21 +61,108 @@ video.addEventListener('timeupdate', tickCaption);
 const loop = () => { tickCaption(); requestAnimationFrame(loop); };
 requestAnimationFrame(loop);
 
-sound.onclick = () => {
-  video.muted = !video.muted;
-  if (!video.muted && video.paused) void video.play();
-  applyLang();
+// ── sonido ──
+// La portada intenta arrancar con sonido. Los navegadores solo lo permiten después de un gesto de la
+// persona (o si ya visitó el sitio), así que si lo bloquean el video arranca en silencio y el sonido
+// se enciende con el primer toque, clic o tecla en cualquier parte de la página.
+const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let wantsSound = true;
+let blocked = false;
+
+function paintSound(): void {
+  sound.textContent = !video.muted ? `🔊 ${t('land.mute')}` : blocked && wantsSound ? `🔊 ${t('land.tap')}` : `🔇 ${t('land.sound')}`;
+  sound.classList.toggle('pulse', video.muted && blocked && wantsSound);
+}
+async function start(): Promise<void> {
+  video.muted = !wantsSound;
+  try {
+    await video.play();
+    blocked = false;
+  } catch {
+    blocked = true;
+    video.muted = true;
+    await video.play().catch(() => (video.controls = true));
+  }
+  paintSound();
+}
+function firstGesture(): void {
+  if (!blocked || !wantsSound) return;
+  blocked = false;
+  video.muted = false;
+  if (video.paused) void video.play();
+  paintSound();
+}
+for (const ev of ['pointerdown', 'keydown', 'touchend']) window.addEventListener(ev, firstGesture, { passive: true });
+
+sound.onclick = (e) => {
+  e.stopPropagation();
+  if (blocked && wantsSound) return firstGesture();
+  wantsSound = video.muted;
+  video.muted = !wantsSound;
+  if (video.paused) void video.play();
+  paintSound();
 };
 video.addEventListener('click', () => (video.paused ? void video.play() : video.pause()));
 
-// Reproduce solo cuando se ve, y nunca si la persona pidió menos movimiento.
-const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Reproduce solo cuando se ve, y nunca sola si la persona pidió menos movimiento.
 if (calm) video.controls = true;
 else {
-  new IntersectionObserver(
-    ([e]) => { if (e.isIntersecting) void video.play().catch(() => (video.controls = true)); else video.pause(); },
-    { threshold: 0.35 },
-  ).observe(video);
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) void start(); else video.pause(); }, { threshold: 0.35 }).observe(video);
+}
+
+// ── efectos de scroll ──
+// Fondo: las ciudades pintadas del juego se van fundiendo una en otra a medida que se baja.
+const scene = document.getElementById('scene')!;
+const SCENES = ['bg_tokyo', 'bg_baires', 'bg_paris', 'bg_nyc', 'bg_rio'];
+const layers = SCENES.map((name) => {
+  const el = document.createElement('i');
+  el.style.backgroundImage = `url(./art/${name}.webp)`;
+  scene.append(el);
+  return el;
+});
+const progress = document.getElementById('progress')!;
+const player = document.getElementById('player')!;
+let queued = false;
+function onScroll(): void {
+  queued = false;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  progress.style.transform = `scaleX(${p})`;
+  const f = p * (layers.length - 1);
+  layers.forEach((el, i) => {
+    const d = f - i;
+    el.style.opacity = String(Math.max(0, 1 - Math.abs(d)));
+    if (!calm) el.style.transform = `translate3d(0, ${(-d * 46).toFixed(1)}px, 0) scale(${(1.1 + Math.abs(d) * 0.04).toFixed(3)})`;
+  });
+  if (!calm) {
+    // el reproductor llega inclinado y se endereza al quedar en el centro de la pantalla
+    const r = player.getBoundingClientRect();
+    const off = (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight;
+    const k = Math.max(-1, Math.min(1, off * 1.7));
+    player.style.transform = `perspective(1600px) rotateX(${(k * 13).toFixed(2)}deg) scale(${(1 - Math.abs(k) * 0.07).toFixed(3)})`;
+    player.style.setProperty('--glow', (1 - Math.abs(k)).toFixed(2));
+  }
+}
+const requestScroll = () => { if (!queued) { queued = true; requestAnimationFrame(onScroll); } };
+window.addEventListener('scroll', requestScroll, { passive: true });
+window.addEventListener('resize', requestScroll);
+onScroll();
+
+// Las secciones entran de a una, escalonadas, cuando llegan a la vista.
+const groups = document.querySelectorAll<HTMLElement>('[data-reveal-group]');
+for (const g of groups) {
+  [...g.children].forEach((el, i) => {
+    el.classList.add('reveal');
+    (el as HTMLElement).style.setProperty('--i', String(i));
+  });
+}
+if (calm || !('IntersectionObserver' in window)) document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
+else {
+  const io = new IntersectionObserver(
+    (es) => { for (const e of es) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } },
+    { threshold: 0.18, rootMargin: '0px 0px -6% 0px' },
+  );
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
 }
 
 // Tarjeta del equipo: el mismo dibujo de personajes que usa el juego.
