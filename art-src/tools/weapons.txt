@@ -1,0 +1,17 @@
+shotgun|A pump-action shotgun seen exactly from the side, pointing right, horizontal: warm wooden stock and pump, dark steel barrel and receiver.
+launcher|A guided-missile launcher seen exactly from the side, pointing right, horizontal: boxy blue-grey shoulder launcher with two stacked tubes, a small targeting scope on top with a glowing cyan lens, dark grip.
+glove|A big red boxing glove seen from the side, fist pointing right, with a white cuff. Slightly cartoonish and oversized.
+grenade|A single hand grenade, upright: round dark-green segmented body with a yellow stripe, metal lever and pull ring on top.
+rocket|A single bazooka rocket projectile seen exactly from the side, flying to the right, horizontal: olive-green body, orange pointed nose cone, dark tail fins. No flame.
+missile|A single small guided missile seen exactly from the side, flying to the right, horizontal: white and blue-grey body, red pointed nose with a glowing cyan sensor ring, four small fins. No flame.
+booster|A single tall reusable space rocket booster seen exactly from the side, lying horizontal with its nose pointing right: white cylindrical body with a black interstage band, black grid fins near the nose, folded black landing legs near the engine end, soot marks near the engines. No flame, no flags, no markings.
+drone|A single quadcopter attack drone seen from the side, facing right: dark grey body with a red camera eye, four rotors drawn as blurred discs, a small yellow bomb clipped underneath.
+robodog|A single four-legged robot dog seen exactly from the side, facing right, standing: yellow and black armored body, articulated legs, a sensor head with a glowing red visor, and a pack of red explosive sticks with a blinking light strapped to its back.
+battery|A single swollen, overheating lithium battery pack: chunky dark-grey and lime-green rectangular power bank, bulging in the middle, with a glowing orange crack and a few sparks, a yellow lightning-bolt hazard symbol (symbol only, no text).
+parcel|A single cardboard delivery box seen at a slight three-quarter angle: brown corrugated cardboard, sealed with wide teal packing tape, slightly dented corner, a red round fragile sticker with a plain bomb pictogram (symbol only). No brand marks and no smile or arrow logos.
+parachute|A single open cargo parachute canopy seen from the side with its suspension lines converging to a point at the bottom centre: orange and white alternating panels. Nothing attached below.
+designator|A single handheld laser target designator seen from the side, pointing right: rugged dark-grey device with a pistol grip, a big red glowing lens at the front and a small folding satellite dish antenna on top.
+satellite|A single orbital laser satellite: grey-white body with two blue solar panel wings, a gold foil section, and a large red glowing laser lens pointing straight down.
+interceptor|A single compact air-defence interceptor battery seen from the side: a desert-tan armored box launcher with a 4x grid of launch tubes tilted up to the right, on a small base with stabilizer feet, and a small radar dish with a blue glowing light.
+jetpack|A single jetpack seen from a three-quarter back view: two polished red and silver fuel tanks joined by a harness plate with black straps, two downward exhaust nozzles. No flame.
+tablet|A single rugged tablet-style remote controller seen from the front at a slight angle: dark-grey rubber-armored body with two thumbsticks, a short antenna, and a glowing teal screen showing a simple crosshair pictogram.

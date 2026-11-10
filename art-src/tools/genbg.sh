@@ -1,0 +1,9 @@
+#!/bin/zsh
+# uso: genbg.sh <lista.txt> <nombre>
+S=${ART_SRC:-$(cd "$(dirname "$0")/.." && pwd)}
+name=$2
+subj=$(grep "^$name|" $1 | cut -d'|' -f2-)
+mkdir -p $S/gen/bg_$name
+cd $S/gen/bg_$name
+codex exec --skip-git-repo-check -s workspace-write -C $S/gen/bg_$name -i $S/ref/estilo.jpg -o last.txt "Use your image generation tool to create ONE image and save it as $name.png in the current directory. Do not write code to draw it; generate it with the image tool. Do nothing else. The image is a wide panoramic BACKGROUND painting (landscape, about 2:1, as large as the tool allows) for a 2D side-view cartoon artillery game like the attached screenshot (use the screenshot only as a guide for the mood and level of stylisation of the far background, not its content). Subject: $subj Composition rules: the skyline is seen from far across open water; the BOTTOM EDGE of the image is exactly the waterline, so buildings and hills stand directly on the bottom edge and are cut by it; do NOT paint any water, sea, ground, shore, boats or foreground. The landmarks sit in the lower 40 percent, spread across the full width, with the most iconic one near the centre; the upper 60 percent is open sky with a few stylised clouds. Left and right edges should be unremarkable (no landmark cut by the edges). Style: high-end stylised game background illustration, clean shapes with soft painterly gradients, strong atmospheric perspective with 3 depth layers (pale distant hills, mid skyline, slightly darker near skyline), glowing windows where it is dark, rich but harmonious colours, lower contrast and less detail than a foreground so gameplay reads on top of it. No outlines around buildings, no text, no letters, no signs, no logos, no people, no vehicles, no frame, no border." > log.txt 2>&1
+ls $S/gen/bg_$name/$name.png 2>/dev/null || echo "FALLO $name"

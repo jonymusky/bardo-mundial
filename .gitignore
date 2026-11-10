@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.DS_Store
+.vercel/
+*.log
+coverage/
+
+# originales del arte a resolución completa (≈80 MB): quedan fuera del repo
+art-src/gen/
+# cuadros capturados del tráiler
+trailer-out/

@@ -1,0 +1,7 @@
+cap|A single plain baseball cap as it would sit on a round cartoon head seen in three-quarter view facing right (the head is NOT shown): pure WHITE fabric with light grey shading, curved brim pointing right, small button on top. Completely plain, no emblem.
+shades|A single pair of chunky black sunglasses seen in three-quarter view facing right, as worn on a round cartoon head (the head is NOT shown): the nearer left lens is bigger, the right lens smaller, with a sky-blue reflective glint on each lens and one temple arm going back to the left.
+hat|A single brown leather wide-brimmed hat with a darker band, as it would sit on a round cartoon head seen in three-quarter view facing right (the head is NOT shown), brim wide on both sides.
+phones|A single pair of big over-ear headphones as worn on a round cartoon head seen in three-quarter view facing right (the head is NOT shown): a dark grey headband arcing over the top and one large red ear cup on the left side facing the viewer; the far cup is hidden.
+helmet|A single olive-green military combat helmet with a chin strap hanging loose, as it would sit on a round cartoon head seen in three-quarter view facing right (the head is NOT shown).
+crown|A single golden royal crown with five points, red and blue gems, as it would sit on top of a round cartoon head seen in three-quarter view facing right (the head is NOT shown).
+jetpack|A single jetpack seen from the side: two polished red and silver fuel tanks side by side on a harness plate with black straps, two downward exhaust nozzles at the bottom. No flame.
