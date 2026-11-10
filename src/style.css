@@ -128,3 +128,18 @@ canvas.bigprev { width: 100%; height: 250px; border-radius: 16px; background: li
 /* capas sobre el lienzo principal: mundo iluminado (WebGL) y efectos/interfaz */
 canvas.layer { position: fixed; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 .ic-orbital { transform: rotate(-50deg) scale(1.2); }
+
+/* ───── teléfonos: la barra de arriba entra completa y los controles no tapan la ayuda ───── */
+@media (max-width: 700px) {
+  .top { grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px; left: 8px; right: 8px; }
+  .team { grid-template-columns: minmax(36px, 64px) 1fr 28px; gap: 5px; padding: 4px 7px; font-size: 11px; }
+  .timer { font-size: 24px; min-width: 46px; padding: 1px 7px; }
+  .wind { width: 92px; }
+  .btns { gap: 4px; }
+  .btns button { padding: 6px 8px; }
+  .touch { bottom: 172px; }
+}
+@media (pointer: coarse) {
+  /* las instrucciones de teclado no aplican con pantalla táctil */
+  .hint em { display: none; }
+}
