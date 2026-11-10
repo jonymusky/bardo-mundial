@@ -1,0 +1,16 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ channel: 'chrome', headless: true, args: ['--autoplay-policy=no-user-gesture-required'] });
+const p = await b.newPage({ viewport: { width: 1280, height: 720 } });
+const errs = [];
+p.on('console', (m) => m.type() === 'error' && errs.push(m.text()));
+p.on('pageerror', (e) => errs.push(e.message));
+await p.goto(process.argv[2], { waitUntil: 'networkidle' });
+await p.mouse.click(640, 360);
+await p.keyboard.press('KeyM'); await p.keyboard.press('KeyM');
+await p.getByText(/CPU/).first().click();
+await p.waitForTimeout(500);
+await p.evaluate(() => [...document.querySelectorAll('#ui button')].at(-1).click());
+await p.waitForTimeout(3500);
+const r = await p.evaluate(() => performance.getEntriesByType('resource').filter((e) => e.name.includes('music')).map((e) => [e.name.split('/').pop(), e.responseStatus, Math.round(e.transferSize / 1024) + 'KB']));
+console.log('música pedida:', JSON.stringify(r), '| errores:', errs.length ? errs.join(' / ') : 'ninguno');
+await b.close();

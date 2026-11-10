@@ -9,6 +9,9 @@ let noiseBuf: AudioBuffer | null = null;
 let shaper: WaveShaperNode | null = null;
 let muted = false;
 let musicTimer = 0;
+let trackBus: GainNode | null = null;
+/** Volumen de la pista de música (viene masterizada fuerte) y cuánto baja con una explosión. */
+const TRACK = 0.34, DUCK = 0.15;
 /** Desplazamiento del reloj: solo se usa al renderizar fuera de línea, para ubicar cada efecto en su momento. */
 let offT = 0;
 
@@ -83,13 +86,14 @@ export interface Cue { t: number; fx: string; arg?: number }
  * Renderiza música y efectos a un buffer, sin reproducirlos: se usa para la banda de sonido del tráiler.
  * Cada efecto se agenda en su segundo exacto, así queda sincronizado con los cuadros capturados.
  */
-export async function renderOffline(seconds: number, cues: Cue[], sampleRate = 48000): Promise<AudioBuffer> {
-  const prev = { ac, master, fxBus, wet, musicBus, noiseBuf, shaper, musicTimer };
+export async function renderOffline(seconds: number, cues: Cue[], sampleRate = 48000, withMusic = true): Promise<AudioBuffer> {
+  const prev = { ac, master, fxBus, wet, musicBus, noiseBuf, shaper, musicTimer, trackBus };
+  trackBus = null;
   const off = new OfflineAudioContext(2, Math.ceil(seconds * sampleRate), sampleRate);
   ac = off as unknown as AudioContext;
   musicTimer = 0;
   build();
-  startMusic(seconds);
+  if (withMusic) startMusic(seconds);
   const table = sfx as unknown as Record<string, (a?: number) => void>;
   for (const c of cues) {
     offT = c.t;
@@ -97,7 +101,7 @@ export async function renderOffline(seconds: number, cues: Cue[], sampleRate = 4
   }
   offT = 0;
   const buf = await off.startRendering();
-  ({ ac, master, fxBus, wet, musicBus, noiseBuf, shaper, musicTimer } = prev);
+  ({ ac, master, fxBus, wet, musicBus, noiseBuf, shaper, musicTimer, trackBus } = prev);
   return buf;
 }
 
@@ -225,6 +229,7 @@ function charge(power: number): void {
 export const sfx = {
   boom(r: number): void {
     const k = Math.min(1, r / 95);
+    duck(k);
     tone('sine', 110 - k * 40, 26, 0.55 + k * 0.7, 1, 0, { drive: true });
     noise('lowpass', 3200 - k * 1200, 70, 0.7, 0.5 + k * 1.1, 0.9 + k * 0.4, 0, { drive: true });
     noise('highpass', 2400, 5000, 0.7, 0.07, 0.6, 0, { rev: 0.5 });
@@ -399,8 +404,44 @@ function mDrum(kind: number, t: number): void {
   s.stop(t + dur + 0.02);
 }
 
+/** Música de fondo: la pista grabada en loop; si no se puede cargar, la base sintetizada de respaldo. */
 function startMusic(until?: number): void {
   if (!ac || musicTimer) return;
+  if (until !== undefined) return synthMusic(until);
+  musicTimer = -1;
+  const ctx = ac;
+  fetch(`${import.meta.env.BASE_URL}media/music.mp3`)
+    .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(String(r.status)))))
+    .then((b) => ctx.decodeAudioData(b))
+    .then((buf) => {
+      if (ac !== ctx || !master) return;
+      trackBus = ctx.createGain();
+      trackBus.gain.value = 0;
+      trackBus.gain.setTargetAtTime(TRACK, ctx.currentTime, 0.6);
+      trackBus.connect(master);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      src.connect(trackBus);
+      src.start();
+    })
+    .catch(() => {
+      musicTimer = 0;
+      synthMusic();
+    });
+}
+
+/** La música baja un instante para que la explosión se escuche por encima. */
+function duck(k: number): void {
+  if (!ac || !trackBus) return;
+  const t = ac.currentTime;
+  trackBus.gain.cancelScheduledValues(t);
+  trackBus.gain.setTargetAtTime(TRACK - (TRACK - DUCK) * k, t, 0.02);
+  trackBus.gain.setTargetAtTime(TRACK, t + 0.3 + k * 0.3, 0.45);
+}
+
+function synthMusic(until?: number): void {
+  if (!ac || musicTimer > 0) return;
   const step = 60 / 100 / 4; // semicorchea
   let next = ac.currentTime + 0.1;
   let i = 0;

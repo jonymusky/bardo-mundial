@@ -27,9 +27,10 @@ Esta versión se hizo conversando:
 - **Código:** Claude Code (Claude Fable 5.2).
 - **Ilustraciones:** generador de imágenes de Codex, 82 pedidos. Las descripciones usadas están en
   [`art-src/tools`](art-src/tools).
-- **Sonido y música:** sintetizados en el navegador con WebAudio, sin archivos de audio.
-- **Tráiler:** capturado cuadro por cuadro del propio juego, con la banda de sonido renderizada por el mismo
-  sintetizador ([`scripts/trailer`](scripts/trailer)).
+- **Música:** «Bardo Mundial Theme», generada con Suno (plan gratuito). El tráiler usa la misma pista llevada a 100 bpm para que los pulsos caigan en los cortes.
+- **Efectos de sonido:** sintetizados en el navegador con WebAudio, sin archivos de audio.
+- **Tráiler:** capturado cuadro por cuadro del propio juego, con los efectos renderizados por el mismo
+  sintetizador en el cuadro exacto de cada evento ([`scripts/trailer`](scripts/trailer)).
 
 ## Desarrollo
 
@@ -78,6 +79,11 @@ propio y en `usuario.github.io/repo/`.
 Código bajo [MIT](LICENSE). Los originales de las ilustraciones a resolución completa no están en el
 repositorio; las versiones que usa el juego están en `public/art`.
 
+**La música no está bajo MIT.** `public/media/music.mp3` (y el audio de `public/media/trailer.mp4`) se generó
+con Suno en el plan gratuito. Según las condiciones de Suno para ese plan, la titularidad de la canción es de
+Suno y el uso permitido es personal y no comercial: no se puede vender ni monetizar. Si reutilizás este
+proyecto con fines comerciales, reemplazá esa pista; sin el archivo, el juego usa una base sintetizada.
+
 ---
 
 ## English
@@ -90,10 +96,12 @@ drones, robot dogs, an orbital laser and a jetpack. Every bit of terrain breaks.
 
 **Why it exists.** This game is my test bench for AI models: whenever a new one comes out, I ask it to take the
 same game one step further and see what it can really do. This version was built in conversation: Claude Code
-(Claude Fable 5.2) wrote the code, the illustrations came from Codex image generation (82 requests), and sound
-and music are synthesized in the browser. The trailer was captured frame by frame from the game itself.
+(Claude Fable 5.2) wrote the code, the illustrations came from Codex image generation (82 requests), the music was
+generated with Suno and the sound effects are synthesized in the browser. The trailer was captured frame by frame from the game itself.
 
-**Develop.** Node 24+. `npm install`, `npm run dev`, `npm test`, `npm run build`. Code is MIT-licensed.
+**Develop.** Node 24+. `npm install`, `npm run dev`, `npm test`, `npm run build`. Code is MIT-licensed. The music
+(`public/media/music.mp3` and the trailer audio) is not: it was generated on Suno's free plan, which keeps
+ownership with Suno and allows personal, non-commercial use only.
 
 ## Português
 
@@ -106,7 +114,10 @@ drones, cães-robô, laser orbital e jetpack. Todo o terreno quebra.
 **Por que existe.** Este jogo é a minha bancada de testes para modelos de IA: sempre que sai um novo, peço que
 leve o mesmo jogo um passo adiante e vejo o que ele consegue fazer de verdade. Esta versão foi feita
 conversando: o Claude Code (Claude Fable 5.2) escreveu o código, as ilustrações vieram do gerador de imagens do
-Codex (82 pedidos), e o som e a música são sintetizados no navegador. O trailer foi capturado quadro a quadro
+Codex (82 pedidos), a música foi gerada com o Suno e os efeitos
+sonoros são sintetizados no navegador. O trailer foi capturado quadro a quadro
 do próprio jogo.
 
-**Desenvolver.** Node 24+. `npm install`, `npm run dev`, `npm test`, `npm run build`. Código sob licença MIT.
+**Desenvolver.** Node 24+. `npm install`, `npm run dev`, `npm test`, `npm run build`. Código sob licença MIT. A música
+(`public/media/music.mp3` e o áudio do trailer) não: foi gerada no plano gratuito do Suno, que mantém a
+titularidade com o Suno e permite apenas uso pessoal e não comercial.

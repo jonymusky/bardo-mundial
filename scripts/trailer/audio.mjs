@@ -4,6 +4,8 @@ import { chromium } from 'playwright-core';
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const dir = process.argv[2] ?? 'trailer-out';
+// con `--fx` se renderizan solo los efectos: la música grabada se mezcla después en build.sh
+const fxOnly = process.argv.includes('--fx');
 const { seconds, cues } = JSON.parse(readFileSync(`${dir}/cues.json`, 'utf8'));
 const FIRE = { shotgun: 'shotgun', laser: 'laser', orbital: 'whoosh', drones: 'whoosh', parcel: 'whoosh', jetpack: 'jet', grenade: 'throw', battery: 'drop', dog: 'drop', dome: 'drop' };
 const plan = [];
@@ -20,8 +22,8 @@ const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const page = await browser.newPage();
 await page.goto('http://localhost:5199/play.html');
 await page.waitForFunction(() => window.__bardo);
-const b64 = await page.evaluate(async ([seconds, plan]) => {
-  const buf = await window.__bardo.renderOffline(seconds, plan);
+const b64 = await page.evaluate(async ([seconds, plan, withMusic]) => {
+  const buf = await window.__bardo.renderOffline(seconds, plan, 48000, withMusic);
   const n = buf.length, ch = [buf.getChannelData(0), buf.getChannelData(1)];
   const out = new DataView(new ArrayBuffer(44 + n * 4));
   const str = (o, s) => { for (let i = 0; i < s.length; i++) out.setUint8(o + i, s.charCodeAt(i)); };
@@ -32,7 +34,7 @@ const b64 = await page.evaluate(async ([seconds, plan]) => {
   const u8 = new Uint8Array(out.buffer);
   for (let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode(...u8.subarray(i, i + 0x8000));
   return btoa(bin);
-}, [seconds, plan]);
+}, [seconds, plan, !fxOnly]);
 writeFileSync(`${dir}/audio.wav`, Buffer.from(b64, 'base64'));
 console.log(`audio.wav: ${seconds.toFixed(2)} s, ${plan.length} efectos`);
 await browser.close();

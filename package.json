@@ -19,7 +19,7 @@
     "preview": "vite preview",
     "test": "node scripts/simtest.ts 10",
     "simtest": "node scripts/simtest.ts",
-    "trailer": "node scripts/trailer/capture.mjs trailer-out && node scripts/trailer/audio.mjs trailer-out && sh scripts/trailer/build.sh trailer-out"
+    "trailer": "node scripts/trailer/capture.mjs trailer-out && node scripts/trailer/audio.mjs trailer-out --fx && sh scripts/trailer/build.sh trailer-out"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
